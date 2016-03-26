@@ -2,15 +2,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivityFragment">
+    tools:context=".fragment.MainActivityFragment">
 
     <GridView
         android:id="@+id/gridView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="true"
-        android:drawSelectorOnTop="true"
         android:columnWidth="150dp"
+        android:drawSelectorOnTop="true"
         android:focusable="true"
         android:gravity="center"
         android:numColumns="auto_fit" />

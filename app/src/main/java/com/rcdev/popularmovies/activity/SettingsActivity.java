@@ -1,10 +1,12 @@
-package com.rcdev.popularmovies;
+package com.rcdev.popularmovies.activity;
 
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+
+import com.rcdev.popularmovies.R;
 
 /**
  * Created by coreyestes on 7/24/15.
