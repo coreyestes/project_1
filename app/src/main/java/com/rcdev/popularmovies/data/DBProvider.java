@@ -29,10 +29,10 @@ public class DBProvider extends ContentProvider {
 
     private Cursor getMovieByMovieId(Uri uri, String[] projection, String sortOrder) {
         String favoriteMovieId = MovieContract.FavoriteEntry.getFavoriteIdFromUri(uri);
-        Log.i(LOG_TAG, "id in getMovieByMoiveId method: " + favoriteMovieId);
+        Log.i(LOG_TAG, "id in getMovieByMovieId method: " + favoriteMovieId);
         String[] selectionArgs = new String[]{favoriteMovieId};
         String selection = sMovieWithIDSelection;
-        Log.i(LOG_TAG, "selection in getMovieByMoiveID method: " + selection);
+        Log.i(LOG_TAG, "selection in getMovieByMovieID method: " + selection);
         return mOpenHelper.getReadableDatabase().query(MovieContract.FavoriteEntry.TABLE_NAME,
                 projection,
                 selection,
@@ -127,7 +127,7 @@ public class DBProvider extends ContentProvider {
                 long _id = db.insert(MovieContract.FavoriteEntry.TABLE_NAME, null, values);
                 Log.i(LOG_TAG, "insert Id: " + _id);
                 //insert unless it is already contained in the database
-                if (_id > 0)
+                if (_id > -1)
                     returnUri = MovieContract.FavoriteEntry.buildFavoriteUri(_id);
                 else
                     throw new android.database.SQLException("Failed to inset row into " + uri);

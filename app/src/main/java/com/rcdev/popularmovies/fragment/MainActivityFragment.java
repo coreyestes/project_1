@@ -99,7 +99,6 @@ public class MainActivityFragment extends Fragment {
                 intent.putExtra("id", item.getId()).
                         putExtra("title", item.getTitle()).
                         putExtra("overview", item.getOverview()).
-                        putExtra("back_drop", item.getBack_drop()).
                         putExtra("release_date", item.getRelease_date()).
                         putExtra("popularity", item.getPopularity()).
                         putExtra("vote_avg", item.getVote_average()).
@@ -206,7 +205,6 @@ public class MainActivityFragment extends Fragment {
                 moviePoster.setId(movieResults.getString(Constants.ID));
                 moviePoster.setTitle(movieResults.getString(Constants.TITLE));
                 moviePoster.setPath(movieResults.getString(Constants.POSTER_PATH));
-                moviePoster.setBack_drop(movieResults.getString(Constants.BACKDROP));
                 moviePoster.setOverview(movieResults.getString(Constants.DESC));
                 moviePoster.setPopularity(movieResults.getString(Constants.POPULARITY));
                 moviePoster.setRelease_date(movieResults.getString(Constants.RELEASE_DATE));

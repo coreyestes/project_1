@@ -9,11 +9,9 @@ import com.rcdev.popularmovies.utils.Constants;
  * Created by coreyestes on 7/22/15.
  */
 public class MovieItem implements Parcelable {
-    private String thumb;
     private String id;
     private String title;
     private String poster;
-    private String back_drop;
     private String overview;
     private String release_date;
     private String rating;
@@ -31,12 +29,10 @@ public class MovieItem implements Parcelable {
 
     protected MovieItem(Parcel in) {
         id = in.readString();
-        thumb = in.readString();
         results = in.readString();
         title = in.readString();
         path = in.readString();
         full_poster = in.readString();
-        back_drop = in.readString();
         overview = in.readString();
         vote_average = in.readString();
         release_date = in.readString();
@@ -59,25 +55,10 @@ public class MovieItem implements Parcelable {
         }
     };
 
-    public MovieItem(String id, String thumb, String title, String full_poster, String backdrop, String overview, String release_date, String rating) {
+    public MovieItem(String id, String title, String full_poster, String overview, String release_date, String rating) {
 
     }
 
-    public String getBackdrop() {
-        return back_drop;
-    }
-
-    public void setBackdrop(String backdrop) {
-        this.back_drop = Constants.BASE_IMAGE_PATH + backdrop;
-    }
-
-    public String getThumb() {
-        return thumb;
-    }
-
-    public void setThumb(String thumb) {
-        this.thumb = thumb;
-    }
 
     public String getFull_poster() {
         return full_poster;
@@ -175,14 +156,6 @@ public class MovieItem implements Parcelable {
         this.poster = poster;
     }
 
-    public String getBack_drop() {
-        return back_drop;
-    }
-
-    public void setBack_drop(String back_drop) {
-        this.back_drop = back_drop;
-    }
-
     public String getRating() {
         return rating;
     }
@@ -200,10 +173,8 @@ public class MovieItem implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
         dest.writeString(results);
-        dest.writeString(thumb);
         dest.writeString(path);
         dest.writeString(title);
-        dest.writeString(back_drop);
         dest.writeString(overview);
         dest.writeString(release_date);
         dest.writeString(popularity);

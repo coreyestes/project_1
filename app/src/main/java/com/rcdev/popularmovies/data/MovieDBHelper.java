@@ -4,9 +4,11 @@ package com.rcdev.popularmovies.data;
  * Created by coreyestes
  * 2016 02 04
  */
+
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
 import com.rcdev.popularmovies.data.MovieContract.FavoriteEntry;
 
 /**
@@ -16,26 +18,26 @@ import com.rcdev.popularmovies.data.MovieContract.FavoriteEntry;
 public class MovieDBHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 
-    public static final String DATABASE_NAME ="movie.db";
+    public static final String DATABASE_NAME = "movie.db";
 
-    public MovieDBHelper (Context context){
+    public MovieDBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
+
     @Override
-    public void onCreate (SQLiteDatabase sqLiteDatabase){
+    public void onCreate(SQLiteDatabase sqLiteDatabase) {
 
         final String SQL_CREATE_Favorite_TABLE = "CREATE TABLE " +
                 FavoriteEntry.TABLE_NAME + " (" +
                 FavoriteEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 FavoriteEntry.COLUMN_MOVIE_ID + " INTEGER NOT NULL, " +
-                FavoriteEntry.COLUMN_TITLE +" TEXT NOT NULL, "+
-                FavoriteEntry.COLUMN_THUMB + " INTEGER NOT NULL, " +
-                FavoriteEntry.COLUMN_BACK_DROP + " TEXT NOT NULL, " +
-                FavoriteEntry.COLUMN_POSTER + " TEXT NOT NULL, "+
+                FavoriteEntry.COLUMN_TITLE + " TEXT NOT NULL, " +
+                FavoriteEntry.COLUMN_POSTER + " TEXT NOT NULL, " +
                 FavoriteEntry.COLUMN_OVERVIEW + " TEXT NOT NULL, " +
                 FavoriteEntry.COLUMN_RATING + " REAL NOT NULL, " +
-                FavoriteEntry.COLUMN_RELEASE_DATE + " TEXT NOT NULL); " ;
+                FavoriteEntry.COLUMN_RELEASE_DATE + " TEXT NOT NULL); " +
 
+                " UNIQUE (" + FavoriteEntry.COLUMN_MOVIE_ID + ") ON CONFLICT REPLACE);";
 
         sqLiteDatabase.execSQL(SQL_CREATE_Favorite_TABLE);
 

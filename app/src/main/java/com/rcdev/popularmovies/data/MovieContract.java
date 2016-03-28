@@ -35,8 +35,6 @@ public class MovieContract {
 
         public static final String COLUMN_MOVIE_ID = "movie_id";
         public static final String COLUMN_TITLE = "title";
-        public static final String COLUMN_THUMB = "thumb";
-        public static final String COLUMN_BACK_DROP = "back_drop";
         public static final String COLUMN_POSTER = "poster";
         public static final String COLUMN_OVERVIEW = "overview";
         public static final String COLUMN_RATING = "rating";

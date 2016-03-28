@@ -2,6 +2,7 @@ package com.rcdev.popularmovies.fragment;
 
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -48,14 +49,14 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
     private static final String LOG_TAG = DetailActivityFragment.class.getSimpleName();
     protected String movie_id;
     protected String movie_title;
-    protected String movie_thumb;
+
     protected String movie_poster;
     protected String movie_backdrop;
     protected String movie_release;
     protected String movie_rating;
     protected String movie_overview;
 
-
+    private Context mContext;
     private ArrayList<TrailerItem> mTrailerData;
     private ArrayList<ReviewItem> mReviewData;
     private TrailerAdapter mTrailerAdapter;
@@ -176,10 +177,10 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
             Log.i(LOG_TAG, "uri is: " + uri);
             try {
                 final Cursor favoriteCursor = getActivity().getContentResolver().query(uri, null, null, null, null);
-                Log.i(LOG_TAG, "cursor: " + favoriteCursor);
-                if ((favoriteCursor != null) && (!(favoriteCursor.moveToNext()))) {
+                if (favoriteCursor != null) {
                     ContentValues contentValues = generateContentValues();
                     Uri insertedUri = getActivity().getContentResolver().insert(MovieContract.FavoriteEntry.CONTENT_URI, contentValues);
+                    favoriteCursor.close();
                     long id = ContentUris.parseId(insertedUri);
                     Log.i(LOG_TAG, "id is :" + id);
                     if (id != -1) {
@@ -188,10 +189,9 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
                 } else {
                     deleteFavorite();
                     Toast.makeText(getActivity(), "Delete from favorites", Toast.LENGTH_SHORT).show();
-                }
-                if (favoriteCursor != null) {
                     favoriteCursor.close();
                 }
+
             } catch (Exception e) {
 
             }
@@ -203,8 +203,6 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
         ContentValues favoriteMovieValues = new ContentValues();
         favoriteMovieValues.put(MovieContract.FavoriteEntry.COLUMN_MOVIE_ID, movie_id);
         favoriteMovieValues.put(MovieContract.FavoriteEntry.COLUMN_TITLE, movie_title);
-        favoriteMovieValues.put(MovieContract.FavoriteEntry.COLUMN_THUMB, movie_thumb);
-        favoriteMovieValues.put(MovieContract.FavoriteEntry.COLUMN_BACK_DROP, movie_backdrop);
         favoriteMovieValues.put(MovieContract.FavoriteEntry.COLUMN_POSTER, movie_poster);
         favoriteMovieValues.put(MovieContract.FavoriteEntry.COLUMN_OVERVIEW, movie_overview);
         favoriteMovieValues.put(MovieContract.FavoriteEntry.COLUMN_RATING, movie_rating);
