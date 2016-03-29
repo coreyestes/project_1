@@ -49,9 +49,7 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
     private static final String LOG_TAG = DetailActivityFragment.class.getSimpleName();
     protected String movie_id;
     protected String movie_title;
-
     protected String movie_poster;
-    protected String movie_backdrop;
     protected String movie_release;
     protected String movie_rating;
     protected String movie_overview;
@@ -164,7 +162,6 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
 
     }
 
-    // handle favorite button on click
     @Override
     public void onClick(View v) {
         Log.i(LOG_TAG, "Button clicked-");
@@ -189,6 +186,7 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
                 } else {
                     deleteFavorite();
                     Toast.makeText(getActivity(), "Delete from favorites", Toast.LENGTH_SHORT).show();
+                    assert favoriteCursor != null;
                     favoriteCursor.close();
                 }
 
@@ -198,7 +196,6 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
         }
     }
 
-    //insert movie to FavoriteEntry table
     private ContentValues generateContentValues() {
         ContentValues favoriteMovieValues = new ContentValues();
         favoriteMovieValues.put(MovieContract.FavoriteEntry.COLUMN_MOVIE_ID, movie_id);
