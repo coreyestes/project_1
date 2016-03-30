@@ -164,9 +164,6 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-        Log.i(LOG_TAG, "Button clicked-");
-        if (v == null) return;
-        Log.i(LOG_TAG, "Button clicked+");
 
         final int resId = v.getId();
         if (resId == R.id.btFavorite) {
@@ -174,24 +171,21 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
             Log.i(LOG_TAG, "uri is: " + uri);
             try {
                 final Cursor favoriteCursor = getActivity().getContentResolver().query(uri, null, null, null, null);
-                if (favoriteCursor != null) {
+                if (favoriteCursor == null) {
                     ContentValues contentValues = generateContentValues();
                     Uri insertedUri = getActivity().getContentResolver().insert(MovieContract.FavoriteEntry.CONTENT_URI, contentValues);
-                    favoriteCursor.close();
                     long id = ContentUris.parseId(insertedUri);
                     Log.i(LOG_TAG, "id is :" + id);
-                    if (id != -1) {
-                        Toast.makeText(getActivity(), "Added to Favorites", Toast.LENGTH_SHORT).show();
-                    }
+                    Toast.makeText(getActivity(), "Added to Favorites", Toast.LENGTH_SHORT).show();
+
                 } else {
                     deleteFavorite();
                     Toast.makeText(getActivity(), "Delete from favorites", Toast.LENGTH_SHORT).show();
-                    assert favoriteCursor != null;
                     favoriteCursor.close();
                 }
 
             } catch (Exception e) {
-
+                    Toast.makeText(getActivity(), "Exception Caught: " + e.toString(), Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -210,6 +204,7 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
 
     public void deleteFavorite() {
         getActivity().getContentResolver().delete(MovieContract.FavoriteEntry.CONTENT_URI, movie_id, null);
+        Toast.makeText(getContext(), "Deleted from DB", Toast.LENGTH_LONG).show();
     }
 
     public class FetchReviewTask extends AsyncTask<String, Void, ArrayList<ReviewItem>> {
