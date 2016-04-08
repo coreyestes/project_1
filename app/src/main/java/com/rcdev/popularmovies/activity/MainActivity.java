@@ -40,10 +40,13 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             startActivity(new Intent(this, SettingsActivity.class));
             return true;
+        } else if (id == R.id.action_favorite) {
+            startActivity(new Intent(this, FavoriteActivity.class));
         } else {
             onBackPressed();
             finish();
         }
+
 
         return super.onOptionsItemSelected(item);
     }
