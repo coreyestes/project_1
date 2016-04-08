@@ -43,7 +43,7 @@
             style="@style/detail_overview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/btFavorite"
+            android:layout_below="@+id/ivPoster"
             android:layout_centerHorizontal="true"
             android:text="Overview"
             android:textSize="15sp" />

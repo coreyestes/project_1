@@ -42,21 +42,16 @@ public class DetailFavActivityFragment extends Fragment {
         Intent intent = getActivity().getIntent();
 
 
-        //pass ID
-        if (intent != null && intent.hasExtra(Constants.ID)) {
-            movie_id = intent.getStringExtra(Constants.ID);
-            Log.i(LOG_TAG, "movie id is: " + movie_id);
-        }
 
         //pass title
-        if (intent != null && intent.hasExtra(Constants.TITLE)) {
-            movie_title = intent.getStringExtra(Constants.TITLE);
+        if (intent != null && intent.hasExtra("title")) {
+            movie_title = intent.getStringExtra("title");
             ((TextView) detailView.findViewById(R.id.tvTitle))
                     .setText(movie_title);
 
             getActivity().setTitle(movie_title);
 
-            movie_poster = intent.getStringExtra("path");
+            movie_poster = intent.getStringExtra("poster");
             Log.i(LOG_TAG, "poster URL: " + movie_poster);
             ImageView poster = (ImageView) detailView.findViewById(R.id.ivPoster);
             Picasso
@@ -67,7 +62,7 @@ public class DetailFavActivityFragment extends Fragment {
 
 
             //pass release date
-            movie_release = intent.getStringExtra(Constants.RELEASE_DATE);
+            movie_release = intent.getStringExtra("release_date");
             ((TextView) detailView.findViewById(R.id.tvReleaseDate))
                     .setText(movie_release);
             //pass rating
@@ -75,7 +70,7 @@ public class DetailFavActivityFragment extends Fragment {
             ((TextView) detailView.findViewById(R.id.movie_rating_text))
                     .setText(movie_rating);
             //pass overview
-            movie_overview = intent.getStringExtra(Constants.DESC);
+            movie_overview = intent.getStringExtra("overview");
             ((TextView) detailView.findViewById(R.id.tvOverview))
                     .setText(movie_overview);
 

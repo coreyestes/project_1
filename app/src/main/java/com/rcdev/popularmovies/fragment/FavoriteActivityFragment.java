@@ -93,7 +93,6 @@ public class FavoriteActivityFragment extends Fragment implements LoaderManager.
                         putExtra("release_date", item.getRelease_date()).
                         putExtra("vote_avg", item.getVote_average());
 
-
                 //Start details activity
                 startActivity(intent);
             }
@@ -131,11 +130,7 @@ public class FavoriteActivityFragment extends Fragment implements LoaderManager.
         MovieDBHelper db = new MovieDBHelper(getContext());
         db.getReadableDatabase();
         mMovieData = db.getAllMovies();
-
-
         db.close();
-
-
     }
 
     @Override
