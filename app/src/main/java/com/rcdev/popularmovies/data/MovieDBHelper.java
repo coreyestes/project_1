@@ -6,10 +6,14 @@ package com.rcdev.popularmovies.data;
  */
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.rcdev.popularmovies.data.MovieContract.FavoriteEntry;
+import com.rcdev.popularmovies.objects.MovieItem;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by coreyestes
@@ -28,16 +32,16 @@ public class MovieDBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
 
         final String SQL_CREATE_Favorite_TABLE = "CREATE TABLE " +
-                FavoriteEntry.TABLE_NAME + " (" +
-                FavoriteEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                FavoriteEntry.COLUMN_MOVIE_ID + " INTEGER NOT NULL, " +
-                FavoriteEntry.COLUMN_TITLE + " TEXT NOT NULL, " +
-                FavoriteEntry.COLUMN_POSTER + " TEXT NOT NULL, " +
-                FavoriteEntry.COLUMN_OVERVIEW + " TEXT NOT NULL, " +
-                FavoriteEntry.COLUMN_RATING + " REAL NOT NULL, " +
-                FavoriteEntry.COLUMN_RELEASE_DATE + " TEXT NOT NULL); " +
+                MovieContract.MovieEntry.TABLE_NAME + " (" +
+                MovieContract.MovieEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                MovieContract.MovieEntry.COLUMN_MOVIE_ID + " INTEGER NOT NULL, " +
+                MovieContract.MovieEntry.COLUMN_TITLE + " TEXT NOT NULL, " +
+                MovieContract.MovieEntry.COLUMN_POSTER + " TEXT NOT NULL, " +
+                MovieContract.MovieEntry.COLUMN_DESCRIPTION + " TEXT NOT NULL, " +
+                MovieContract.MovieEntry.COLUMN_RATING + " REAL NOT NULL, " +
+                MovieContract.MovieEntry.COLUMN_YEAR + " TEXT NOT NULL); " +
 
-                " UNIQUE (" + FavoriteEntry.COLUMN_MOVIE_ID + ") ON CONFLICT REPLACE);";
+                " UNIQUE (" + MovieContract.MovieEntry.COLUMN_MOVIE_ID + ") ON CONFLICT REPLACE);";
 
         sqLiteDatabase.execSQL(SQL_CREATE_Favorite_TABLE);
 
@@ -51,8 +55,50 @@ public class MovieDBHelper extends SQLiteOpenHelper {
         // It does NOT depend on the version number for your application.
         // If you want to update the schema without wiping data, commenting out the next 2 lines
         // should be your top priority before modifying this method.
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + MovieContract.FavoriteEntry.TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + MovieContract.MovieEntry.TABLE_NAME);
 
         onCreate(sqLiteDatabase);
     }
+
+
+
+    public boolean hasObject(String id) {
+        SQLiteDatabase db = getWritableDatabase();
+        String selectString = "SELECT * FROM " + MovieContract.MovieEntry.TABLE_NAME + " WHERE " + MovieContract.MovieEntry.COLUMN_MOVIE_ID + " =?";
+        Cursor cursor = db.rawQuery(selectString, new String[] {id});
+        boolean hasObject = false;
+        if(cursor.moveToFirst()){
+            hasObject = true;
+            int count = 0;
+            while(cursor.moveToNext()){
+                count++;
+            }
+        }
+        cursor.close();
+        db.close();
+        return hasObject;
+    }
+
+
+
+    public List<MovieItem> getAllMovies() {
+        List<MovieItem> movieList = new ArrayList<>();
+        String selectQuery = "SELECT  * FROM " + MovieContract.MovieEntry.TABLE_NAME;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                MovieItem movie = new MovieItem(cursor.getString(2), cursor.getString(1),cursor.getString(8), cursor.getString(4), cursor.getString(0), cursor.getString(3), cursor.getString(7), cursor.getString(5));
+                movieList.add(movie);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+
+        return movieList;
+    }
+
+
 }

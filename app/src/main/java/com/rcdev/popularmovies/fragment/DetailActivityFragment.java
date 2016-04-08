@@ -1,20 +1,18 @@
 package com.rcdev.popularmovies.fragment;
 
-import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -24,6 +22,7 @@ import com.rcdev.popularmovies.R;
 import com.rcdev.popularmovies.adapter.ReviewAdapter;
 import com.rcdev.popularmovies.adapter.TrailerAdapter;
 import com.rcdev.popularmovies.data.MovieContract;
+import com.rcdev.popularmovies.data.MovieDBHelper;
 import com.rcdev.popularmovies.objects.ReviewItem;
 import com.rcdev.popularmovies.objects.TrailerItem;
 import com.rcdev.popularmovies.utils.Constants;
@@ -45,7 +44,7 @@ import java.util.ArrayList;
  * Created by coreyestes
  * 2016 02 04
  */
-public class DetailActivityFragment extends Fragment implements View.OnClickListener {
+public class DetailActivityFragment extends Fragment {
     private static final String LOG_TAG = DetailActivityFragment.class.getSimpleName();
     protected String movie_id;
     protected String movie_title;
@@ -91,7 +90,6 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
         View detailView = inflater.inflate(R.layout.fragment_detail, container, false);
         Intent intent = getActivity().getIntent();
 
-        detailView.findViewById(R.id.btFavorite).setOnClickListener(this);
 
         //pass ID
         if (intent != null && intent.hasExtra(Constants.ID)) {
@@ -138,6 +136,21 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
             mTrailerAdapter = new TrailerAdapter(getContext(), R.layout.trailer_item, mTrailerData);
             trailerListView.setAdapter(mTrailerAdapter);
 
+            FloatingActionButton fab = (FloatingActionButton) detailView.findViewById(R.id.btFavorite);
+
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    MovieDBHelper db = new MovieDBHelper(getContext());
+
+                    if (!db.hasObject(movie_id)) {
+                        saveToDatabase();
+                    } else {
+                        removeDatabase();
+                    }
+                }
+            });
+
             trailerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -149,6 +162,7 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
         return detailView;
     }
 
+
     @Override
     public void onStart() {
         super.onStart();
@@ -159,53 +173,32 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
         //Execute FetchReviewTask
         FetchReviewTask fetchReviewTask = new FetchReviewTask();
         fetchReviewTask.execute();
-
     }
 
-    @Override
-    public void onClick(View v) {
+    protected void saveToDatabase() {
+        MovieDBHelper db = new MovieDBHelper(getContext());
+        ContentValues contentValues = generateContentValues();
+        db.getWritableDatabase().insert(MovieContract.MovieEntry.TABLE_NAME, null, contentValues);
+        Toast.makeText(getContext(), "Added to Favorites", Toast.LENGTH_SHORT).show();
+    }
 
-        final int resId = v.getId();
-        if (resId == R.id.btFavorite) {
-            Uri uri = MovieContract.FavoriteEntry.CONTENT_URI.buildUpon().appendPath(movie_id).build();
-            Log.i(LOG_TAG, "uri is: " + uri);
-            try {
-                final Cursor favoriteCursor = getActivity().getContentResolver().query(uri, null, null, null, null);
-                if (favoriteCursor == null) {
-                    ContentValues contentValues = generateContentValues();
-                    Uri insertedUri = getActivity().getContentResolver().insert(MovieContract.FavoriteEntry.CONTENT_URI, contentValues);
-                    long id = ContentUris.parseId(insertedUri);
-                    Log.i(LOG_TAG, "id is :" + id);
-                    Toast.makeText(getActivity(), "Added to Favorites", Toast.LENGTH_SHORT).show();
-
-                } else {
-                    deleteFavorite();
-                    Toast.makeText(getActivity(), "Delete from favorites", Toast.LENGTH_SHORT).show();
-                    favoriteCursor.close();
-                }
-
-            } catch (Exception e) {
-                    Toast.makeText(getActivity(), "Exception Caught: " + e.toString(), Toast.LENGTH_LONG).show();
-            }
-        }
+    protected void removeDatabase() {
+        MovieDBHelper db = new MovieDBHelper(getContext());
+        db.getWritableDatabase().delete(MovieContract.MovieEntry.TABLE_NAME, movie_id, null);
+        Toast.makeText(getContext(), "Removed from Favorites", Toast.LENGTH_SHORT).show();
     }
 
     private ContentValues generateContentValues() {
         ContentValues favoriteMovieValues = new ContentValues();
-        favoriteMovieValues.put(MovieContract.FavoriteEntry.COLUMN_MOVIE_ID, movie_id);
-        favoriteMovieValues.put(MovieContract.FavoriteEntry.COLUMN_TITLE, movie_title);
-        favoriteMovieValues.put(MovieContract.FavoriteEntry.COLUMN_POSTER, movie_poster);
-        favoriteMovieValues.put(MovieContract.FavoriteEntry.COLUMN_OVERVIEW, movie_overview);
-        favoriteMovieValues.put(MovieContract.FavoriteEntry.COLUMN_RATING, movie_rating);
-        favoriteMovieValues.put(MovieContract.FavoriteEntry.COLUMN_RELEASE_DATE, movie_release);
-
+        favoriteMovieValues.put(MovieContract.MovieEntry.COLUMN_POSTER, movie_poster);
+        favoriteMovieValues.put(MovieContract.MovieEntry.COLUMN_TITLE, movie_title);
+        favoriteMovieValues.put(MovieContract.MovieEntry.COLUMN_YEAR, movie_release);
+        favoriteMovieValues.put(MovieContract.MovieEntry.COLUMN_RATING, movie_rating);
+        favoriteMovieValues.put(MovieContract.MovieEntry.COLUMN_DESCRIPTION, movie_overview);
+        favoriteMovieValues.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, movie_id);
         return favoriteMovieValues;
     }
 
-    public void deleteFavorite() {
-        getActivity().getContentResolver().delete(MovieContract.FavoriteEntry.CONTENT_URI, movie_id, null);
-        Toast.makeText(getContext(), "Deleted from DB", Toast.LENGTH_LONG).show();
-    }
 
     public class FetchReviewTask extends AsyncTask<String, Void, ArrayList<ReviewItem>> {
 
