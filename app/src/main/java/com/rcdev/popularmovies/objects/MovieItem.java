@@ -64,8 +64,7 @@ public class MovieItem implements Parcelable {
         this.rating = rating;
     }
 
-    public MovieItem(String string, String string1, String string2, String string3, String string4, String string5, String string6, String string7) {
-    }
+
 
 
     public String getFull_poster() {

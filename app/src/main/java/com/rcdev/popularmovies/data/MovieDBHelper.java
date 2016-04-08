@@ -81,8 +81,8 @@ public class MovieDBHelper extends SQLiteOpenHelper {
 
 
 
-    public List<MovieItem> getAllMovies() {
-        List<MovieItem> movieList = new ArrayList<>();
+    public ArrayList<MovieItem> getAllMovies() {
+        ArrayList<MovieItem> movieList = new ArrayList<>();
         String selectQuery = "SELECT  * FROM " + MovieContract.MovieEntry.TABLE_NAME;
 
         SQLiteDatabase db = this.getReadableDatabase();
@@ -90,7 +90,7 @@ public class MovieDBHelper extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
             do {
-                MovieItem movie = new MovieItem(cursor.getString(2), cursor.getString(1),cursor.getString(8), cursor.getString(4), cursor.getString(0), cursor.getString(3), cursor.getString(7), cursor.getString(5));
+                MovieItem movie = new MovieItem(cursor.getString(0), cursor.getString(2),cursor.getString(3), cursor.getString(4),cursor.getString(1), cursor.getString(5));
                 movieList.add(movie);
             } while (cursor.moveToNext());
         }

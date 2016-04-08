@@ -3,8 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipChildren="false"
-    tools:context=".activity.DetailActivity"
-    tools:showIn="@layout/activity_detail">
+    tools:context=".activity.DetailFavActivity"
+    tools:showIn="@layout/activity_favorite_detail">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -36,15 +36,6 @@
             android:orientation="horizontal">
         </LinearLayout>
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/btFavorite"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/tvOverview"
-            android:layout_alignRight="@+id/tvOverview"
-            android:layout_below="@+id/container"
-            android:src="@drawable/abc_btn_rating_star_on_mtrl_alpha"
-            android:text="Favorite" />
 
 
         <TextView
@@ -57,24 +48,6 @@
             android:text="Overview"
             android:textSize="15sp" />
 
-
-        <com.rcdev.popularmovies.misc.NonScrollListView
-            android:id="@+id/lvTrailer"
-            style="@style/detail_subtitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tvOverview"
-            android:layout_centerHorizontal="true" />
-
-        <com.rcdev.popularmovies.misc.NonScrollListView
-            android:id="@+id/lvReview"
-            style="@style/detail_subtitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/lvTrailer"
-            android:text="review comes here" />
 
         <TextView
             android:id="@+id/tvTitle"
