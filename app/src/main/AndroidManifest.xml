@@ -45,14 +45,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.MainActivity" />
         </activity>
-        <activity
-            android:name=".activity.DetailFavActivity"
-            android:label="@string/title_activity_favorite"
-            android:parentActivityName=".activity.FavoriteActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.FavoriteActivity" />
-        </activity>
 
         <provider
             android:name=".data.MovieProvider"

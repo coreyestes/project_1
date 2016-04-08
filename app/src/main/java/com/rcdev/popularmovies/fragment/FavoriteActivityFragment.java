@@ -16,10 +16,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.rcdev.popularmovies.R;
-import com.rcdev.popularmovies.activity.DetailActivity;
-import com.rcdev.popularmovies.activity.DetailFavActivity;
+
 import com.rcdev.popularmovies.activity.FavoriteActivity;
 import com.rcdev.popularmovies.adapter.MoviePosterAdapter;
 import com.rcdev.popularmovies.data.MovieContract;
@@ -40,7 +40,7 @@ import static android.widget.AdapterView.*;
  */
 public class FavoriteActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    protected String poster;
+
 
     private static final String LOG_TAG = FavoriteActivity.class.getSimpleName();
     private MoviePosterAdapter mMovieAdapter;
@@ -59,14 +59,6 @@ public class FavoriteActivityFragment extends Fragment implements LoaderManager.
             MovieContract.MovieEntry.COLUMN_RATING,};
 
 
-    private static final int COL_ID = 0;
-    private static final int COL_MOVIE_ID = 1;
-    private static final int COL_TITLE = 2;
-    private static final int COL_POSTER = 3;
-    private static final int COL_MOVIE_DESCRIPTION = 4;
-    private static final int COL_MOVIE_YEAR = 5;
-    private static final int COL_MOVIE_RATING = 6;
-
 
     @Nullable
     @Override
@@ -75,28 +67,14 @@ public class FavoriteActivityFragment extends Fragment implements LoaderManager.
         ButterKnife.bind(this, rootView);
         MovieDBHelper db = new MovieDBHelper(getContext());
         ArrayList<MovieItem> favorites = db.getAllMovies();
-
+        if(favorites.size()<0) {
+            Toast.makeText(getActivity(), "No Favorites Added", Toast.LENGTH_SHORT).show();
+        }
 
         mMovieAdapter = new MoviePosterAdapter(getActivity(), R.layout.movie_grid_item, favorites);
         gridView.setAdapter(mMovieAdapter);
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                MovieItem item = (MovieItem) parent.getItemAtPosition(position);
-                Intent intent = new Intent(getActivity(), DetailFavActivity.class);
-                ImageView imageView = (ImageView) v.findViewById(R.id.ivMovieItem);
-                int[] screenLocation = new int[2];
-                imageView.getLocationOnScreen(screenLocation);
-                intent.putExtra("id", item.getId()).
-                        putExtra("title", item.getTitle()).
-                        putExtra("poster", item.getFull_poster()).
-                        putExtra("overview", item.getOverview()).
-                        putExtra("release_date", item.getRelease_date()).
-                        putExtra("vote_avg", item.getVote_average());
 
-                //Start details activity
-                startActivity(intent);
-            }
-        });
+
         return rootView;
     }
 
