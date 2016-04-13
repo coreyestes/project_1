@@ -12,7 +12,9 @@ public class ReviewItem implements Parcelable {
     private String author;
     private String content;
 
-    public ReviewItem(){super();}
+    public ReviewItem() {
+        super();
+    }
 
     public ReviewItem(String author, String content) {
         this.author = author;
@@ -24,7 +26,6 @@ public class ReviewItem implements Parcelable {
         author = in.readString();
         content = in.readString();
     }
-
 
 
     @Override

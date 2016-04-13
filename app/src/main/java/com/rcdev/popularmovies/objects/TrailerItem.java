@@ -12,7 +12,9 @@ public class TrailerItem implements Parcelable {
     private String name;
     private String key;
 
-    public TrailerItem(){super();}
+    public TrailerItem() {
+        super();
+    }
 
 
     public TrailerItem(String name, String key) {

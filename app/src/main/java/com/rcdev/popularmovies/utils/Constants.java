@@ -42,7 +42,5 @@ public final class Constants {
     //TRAILER
     public static final String KEY = "key";
     public static final String NAME = "name";
-
-
-
+    
 }

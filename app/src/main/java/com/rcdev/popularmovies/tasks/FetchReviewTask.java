@@ -74,7 +74,6 @@ public class FetchReviewTask extends AsyncTask<String, Void, ArrayList<ReviewIte
     }
 
 
-
     @Override
     protected ArrayList<ReviewItem> doInBackground(String... params) {
         HttpURLConnection urlConnection = null;

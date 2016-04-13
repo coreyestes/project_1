@@ -23,14 +23,6 @@
         <item name="android:layout_marginRight">@dimen/margin_large</item>
         <item name="android:lineSpacingMultiplier">@dimen/body_text_line_spacing</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body1</item>
-        <item name="android:layout_centerHorizontal">true</item>
-    </style>
-
-    <style name="detail_thumb_image">
-        <item name="android:layout_marginLeft">@dimen/margin_large</item>
-        <item name="android:layout_marginTop">@dimen/details_thumb_margin_top</item>
-        <item name="android:src">#9575CD</item>
-
     </style>
 
     <style name="detail_title">
@@ -48,13 +40,6 @@
         <item name="android:layout_marginLeft">@dimen/margin_large</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Subhead</item>
         <item name="android:text">2015 released</item>
-    </style>
-
-    <style name="detail_rate">
-        <item name="android:layout_marginTop">-8dp</item>
-        <item name="android:layout_marginRight">@dimen/margin_default</item>
-        <item name="android:layout_marginLeft">@dimen/margin_large</item>
-        <item name="android:gravity">bottom</item>
     </style>
 
     <style name="detail_subtitle">

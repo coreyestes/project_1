@@ -8,8 +8,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.rcdev.popularmovies.R;
+import com.rcdev.popularmovies.fragment.DetailActivityFragment;
 
 public class MainActivity extends AppCompatActivity {
+
+
+    private boolean mTwoPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,6 +21,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
+        if (findViewById(R.id.content_detail) != null) {
+            mTwoPane = true;
+
+            if (savedInstanceState == null) {
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_detail, new DetailActivityFragment()).commit();
+            } else {
+                mTwoPane = false;
+            }
+        }
 
 
     }

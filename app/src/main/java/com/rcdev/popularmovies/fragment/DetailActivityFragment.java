@@ -179,22 +179,13 @@ public class DetailActivityFragment extends Fragment {
         MovieDBHelper db = new MovieDBHelper(getContext());
         ContentValues contentValues = generateContentValues();
         db.getWritableDatabase().insert(MovieContract.MovieEntry.TABLE_NAME, null, contentValues);
-        Toast.makeText(getContext(), "Added to Favorites", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), R.string.addDB, Toast.LENGTH_SHORT).show();
     }
-
-
-    /*
-    //---deletes a particular title---
-public boolean deleteTitle(String name)
-{
-    return db.delete(DATABASE_TABLE, KEY_NAME + "=" + name, null) > 0;
-     */
-
 
     protected void removeDatabase() {
         MovieDBHelper db = new MovieDBHelper(getContext());
         db.getWritableDatabase().delete(MovieContract.MovieEntry.TABLE_NAME, "movie_id = ?", new String[]{String.valueOf(movie_id)});
-        Toast.makeText(getContext(), "Removed from Favorites", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), R.string.removeDB, Toast.LENGTH_SHORT).show();
     }
 
     private ContentValues generateContentValues() {

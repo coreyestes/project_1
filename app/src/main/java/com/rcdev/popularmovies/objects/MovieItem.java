@@ -65,8 +65,6 @@ public class MovieItem implements Parcelable {
     }
 
 
-
-
     public String getFull_poster() {
         return full_poster;
     }

@@ -32,4 +32,12 @@
     <string name="overview_title">Overview</string>
     <string name="rating_label">/10</string>
     <string name="title_activity_favorite">Favorites</string>
+    <string name="description">Description</string>
+    <string name="overview">Overview</string>
+    <string name="trailers">Trailers</string>
+    <string name="reviews">Reviews</string>
+    <string name="release_date">Release Date: </string>
+    <string name="release">Release</string>
+    <string name="addDB">Added to Favorites</string>
+    <string name="removeDB">Removed from Favorites</string>
 </resources>

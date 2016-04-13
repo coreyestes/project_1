@@ -29,9 +29,10 @@ public class FetchMovieTask extends AsyncTask<String, Void, ArrayList<MovieItem>
     private MoviePosterAdapter mMovieAdapter;
 
 
-    public void setmMovieAdapter(MoviePosterAdapter moviePosterAdapter){
-        this.mMovieAdapter =moviePosterAdapter;
+    public void setmMovieAdapter(MoviePosterAdapter moviePosterAdapter) {
+        this.mMovieAdapter = moviePosterAdapter;
     }
+
     private ArrayList<MovieItem> getMovieDataFromJson(String MovieJasonStr) throws JSONException {
         final String RESULTS = "results";
 
@@ -157,7 +158,7 @@ public class FetchMovieTask extends AsyncTask<String, Void, ArrayList<MovieItem>
 
     @Override
     protected void onPostExecute(ArrayList<MovieItem> result) {
-        Log.i(LOG_TAG, "Result movie:   "+ result.toString());
+        Log.i(LOG_TAG, "Result movie:   " + result.toString());
         if (result != null && result.isEmpty()) {
             mMovieAdapter.clear();
 

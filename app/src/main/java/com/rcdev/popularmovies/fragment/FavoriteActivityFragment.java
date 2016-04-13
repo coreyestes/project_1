@@ -41,7 +41,6 @@ import static android.widget.AdapterView.*;
 public class FavoriteActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
 
-
     private static final String LOG_TAG = FavoriteActivity.class.getSimpleName();
     private MoviePosterAdapter mMovieAdapter;
     private ArrayList<MovieItem> mMovieData;
@@ -59,7 +58,6 @@ public class FavoriteActivityFragment extends Fragment implements LoaderManager.
             MovieContract.MovieEntry.COLUMN_RATING,};
 
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -67,7 +65,7 @@ public class FavoriteActivityFragment extends Fragment implements LoaderManager.
         ButterKnife.bind(this, rootView);
         MovieDBHelper db = new MovieDBHelper(getContext());
         ArrayList<MovieItem> favorites = db.getAllMovies();
-        if(favorites.size()<0) {
+        if (favorites.size() < 0) {
             Toast.makeText(getActivity(), "No Favorites Added", Toast.LENGTH_SHORT).show();
         }
 
