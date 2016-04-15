@@ -14,8 +14,6 @@ public class MovieItem implements Parcelable {
     private String poster;
     private String overview;
     private String release_date;
-    private String rating;
-    private String results;
     private String path;
     private String popularity;
     private String vote_average;
@@ -29,18 +27,11 @@ public class MovieItem implements Parcelable {
 
     protected MovieItem(Parcel in) {
         id = in.readString();
-        results = in.readString();
         title = in.readString();
-        path = in.readString();
         full_poster = in.readString();
         overview = in.readString();
-        vote_average = in.readString();
         release_date = in.readString();
-        popularity = in.readString();
-        vote_count = in.readString();
-        image = in.readInt();
-
-
+        vote_average = in.readString();
     }
 
     public static final Creator<MovieItem> CREATOR = new Creator<MovieItem>() {
@@ -55,13 +46,13 @@ public class MovieItem implements Parcelable {
         }
     };
 
-    public MovieItem(String id, String title, String full_poster, String overview, String release_date, String rating) {
+    public MovieItem(String id, String title, String full_poster, String overview, String release_date, String vote_average) {
         this.id = id;
         this.title = title;
         this.full_poster = full_poster;
         this.overview = overview;
         this.release_date = release_date;
-        this.rating = rating;
+        this.vote_average = vote_average;
     }
 
 
@@ -73,13 +64,7 @@ public class MovieItem implements Parcelable {
         this.full_poster = Constants.BASE_IMAGE_PATH + path;
     }
 
-    public String getResults() {
-        return results;
-    }
 
-    public void setResults(String results) {
-        this.results = results;
-    }
 
     public String getTitle() {
         return title;
@@ -161,13 +146,6 @@ public class MovieItem implements Parcelable {
         this.poster = poster;
     }
 
-    public String getRating() {
-        return rating;
-    }
-
-    public void setRating(String rating) {
-        this.rating = rating;
-    }
 
     @Override
     public int describeContents() {
@@ -177,15 +155,12 @@ public class MovieItem implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
-        dest.writeString(results);
-        dest.writeString(path);
         dest.writeString(title);
+        dest.writeString(path);
+        dest.writeString(full_poster);
         dest.writeString(overview);
         dest.writeString(release_date);
-        dest.writeString(popularity);
-        dest.writeString(vote_count);
-        dest.writeString(full_poster);
-        dest.writeInt(image);
+        dest.writeString(vote_average);
     }
 }
 

@@ -3,6 +3,7 @@ package com.rcdev.popularmovies.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -10,8 +11,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -19,6 +24,9 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.rcdev.popularmovies.activity.SettingsActivity;
+import com.rcdev.popularmovies.data.MovieContract;
+import com.rcdev.popularmovies.data.MovieDBHelper;
 import com.rcdev.popularmovies.utils.Constants;
 import com.rcdev.popularmovies.objects.MovieItem;
 import com.rcdev.popularmovies.adapter.MoviePosterAdapter;
@@ -43,12 +51,13 @@ import butterknife.ButterKnife;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainActivityFragment extends Fragment {
+public class MainActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String LOG_TAG = MainActivityFragment.class.getSimpleName();
 
     private MoviePosterAdapter mMovieAdapter;
     private ArrayList<MovieItem> mMovieData;
+    private MovieItem[] mMovies;
     @Bind(R.id.gridView)
     GridView gridView;
 
@@ -65,6 +74,16 @@ public class MainActivityFragment extends Fragment {
     }
 
     public MainActivityFragment() {
+    }
+
+    public interface Callback {
+
+        /**
+         * Called when an item is selected in the gridview
+         *
+         * @param movie the selected movie
+         */
+        void onItemSelected(MovieItem movie);
     }
 
 
@@ -88,28 +107,31 @@ public class MainActivityFragment extends Fragment {
         ButterKnife.bind(this, rootView);
 
         mMovieAdapter = new MoviePosterAdapter(getActivity(), R.layout.movie_grid_item, mMovieData);
-        requestMovies();
         gridView.setAdapter(mMovieAdapter);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                MovieItem item = (MovieItem) parent.getItemAtPosition(position);
-                Intent intent = new Intent(getActivity(), DetailActivity.class);
-                ImageView imageView = (ImageView) v.findViewById(R.id.ivMovieItem);
-                int[] screenLocation = new int[2];
-                imageView.getLocationOnScreen(screenLocation);
-                intent.putExtra("id", item.getId()).
-                        putExtra("title", item.getTitle()).
-                        putExtra("overview", item.getOverview()).
-                        putExtra("release_date", item.getRelease_date()).
-                        putExtra("popularity", item.getPopularity()).
-                        putExtra("vote_avg", item.getVote_average()).
-                        putExtra("vote_cnt", item.getVote_count()).
-                        putExtra("path", item.getPath());
-
-                //Start details activity
-                startActivity(intent);
+            @Override
+            public void onItemClick(final AdapterView<?> parent, final View view,
+                                    final int position, final long id) {
+                final MovieItem movie = mMovieAdapter.getItem(position);
+                ((Callback) getActivity()).onItemSelected(movie);
             }
         });
+
+
+        if (savedInstanceState == null) {
+            requestMovies();
+        } else {
+            mMovies = (MovieItem[]) savedInstanceState.getParcelableArray("movies");
+            if (mMovies != null) {
+                mMovieAdapter.clear();
+                for (final MovieItem movie : mMovies) {
+                    mMovieAdapter.add(movie);
+                }
+                mMovieAdapter.notifyDataSetChanged();
+            }
+        }
+
+
         return rootView;
     }
 
@@ -121,18 +143,87 @@ public class MainActivityFragment extends Fragment {
     }
 
 
+    private static final String[] MOVIE_COLUMNS = {
+            MovieContract.MovieEntry.TABLE_NAME + "." + MovieContract.MovieEntry._ID,
+            MovieContract.MovieEntry.COLUMN_MOVIE_ID,
+            MovieContract.MovieEntry.COLUMN_TITLE,
+            MovieContract.MovieEntry.COLUMN_POSTER,
+            MovieContract.MovieEntry.COLUMN_DESCRIPTION,
+            MovieContract.MovieEntry.COLUMN_YEAR,
+            MovieContract.MovieEntry.COLUMN_RATING,};
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        Log.v(LOG_TAG, "In onCreateLoader");
+        Intent intent = getActivity().getIntent();
+        if (intent == null) {
+            return null;
+        }
+
+        // Now create and return a CursorLoader that will take care of
+        // creating a Cursor for the data being displayed.
+        return new CursorLoader(
+                getActivity(),
+                intent.getData(),
+                MOVIE_COLUMNS,
+                null,
+                null,
+                null
+        );
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
+        Log.v(LOG_TAG, "In onLoadFinished");
+        if (!data.moveToFirst()) {
+            return;
+        }
+        MovieDBHelper db = new MovieDBHelper(getContext());
+        db.getReadableDatabase();
+        mMovieData = db.getAllMovies();
+        db.close();
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
+    }
+
+
     private boolean requestMovies() {
         if (isNetworkAvailable()) {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
             String direction = prefs.getString(getString(R.string.pref_direction_key), getString(R.string.pref_direction_default));
-            GetMoviesFromURL getMovies = new GetMoviesFromURL();
-            getMovies.execute(direction);
-            return true;
+            if ("favorites".equals(direction)) {
+                MovieDBHelper db = new MovieDBHelper(getContext());
+                ArrayList<MovieItem> favorites = db.getAllMovies();
+                if (favorites.size() == 0) {
+                    Toast.makeText(getActivity(), "No Favorites Added", Toast.LENGTH_SHORT).show();
+                }
+                mMovieAdapter = new MoviePosterAdapter(getActivity(), R.layout.movie_grid_item, favorites);
+                gridView.setAdapter(mMovieAdapter);
+                gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(final AdapterView<?> parent, final View view,
+                                            final int position, final long id) {
+                        MovieItem movie = mMovieAdapter.getItem(position);
+                        ((Callback) getActivity()).onItemSelected(movie);
+                    }
+                });
+
+
+            } else {
+                GetMoviesFromURL getMovies = new GetMoviesFromURL();
+                getMovies.execute(direction);
+                return true;
+            }
         } else {
             Toast toast = Toast.makeText(getActivity(), "Network Not Available", Toast.LENGTH_SHORT);
             toast.show();
             return false;
         }
+        return false;
     }
 
 

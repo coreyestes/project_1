@@ -9,8 +9,10 @@ import android.view.MenuItem;
 
 import com.rcdev.popularmovies.R;
 import com.rcdev.popularmovies.fragment.DetailActivityFragment;
+import com.rcdev.popularmovies.fragment.MainActivityFragment;
+import com.rcdev.popularmovies.objects.MovieItem;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MainActivityFragment.Callback {
 
 
     private boolean mTwoPane;
@@ -22,17 +24,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
-        if (findViewById(R.id.content_detail) != null) {
-            mTwoPane = true;
-
-            if (savedInstanceState == null) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.content_detail, new DetailActivityFragment()).commit();
-            } else {
-                mTwoPane = false;
-            }
-        }
-
+        mTwoPane = findViewById(R.id.content_detail) != null;
 
     }
 
@@ -41,8 +33,6 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-
-
         return true;
     }
 
@@ -56,8 +46,6 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             startActivity(new Intent(this, SettingsActivity.class));
             return true;
-        } else if (id == R.id.action_favorite) {
-            startActivity(new Intent(this, FavoriteActivity.class));
         } else {
             onBackPressed();
             finish();
@@ -65,5 +53,23 @@ public class MainActivity extends AppCompatActivity {
 
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onItemSelected(MovieItem movie) {
+        final DetailActivityFragment fragment = DetailActivityFragment.newInstance(movie);
+        if (mTwoPane) {
+            // In two-pane mode, show the detail view in this activity by
+            // adding or replacing the detail fragment using a
+            // fragment transaction.
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.content_detail, fragment, DetailActivityFragment.class.getSimpleName())
+                    .commit();
+        } else {
+            Intent intent = new Intent(this, DetailActivity.class);
+            intent.putExtra("movie", movie);
+            startActivity(intent);
+        }
     }
 }

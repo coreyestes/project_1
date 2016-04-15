@@ -6,6 +6,8 @@
     <string name="title_activity_settings">Settings</string>
     <string name="title_activity_detail">DetailActivity</string>
     <string name="pref_sort_default">popularity.desc</string>
+    <string name="pref_sort_favorite">favorites</string>
+    <string name="pref_sort_favorite_label">Favorites</string>
     <string name="pref_sort_label">Sort By</string>
     <string name="pref_direction_label">Direction</string>
     <string name="pref_sort_key">sort</string>

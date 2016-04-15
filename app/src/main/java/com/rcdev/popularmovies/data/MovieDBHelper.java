@@ -11,6 +11,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.rcdev.popularmovies.objects.MovieItem;
+import com.rcdev.popularmovies.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,14 +39,15 @@ public class MovieDBHelper extends SQLiteOpenHelper {
                 MovieContract.MovieEntry.COLUMN_TITLE + " TEXT NOT NULL, " +
                 MovieContract.MovieEntry.COLUMN_POSTER + " TEXT NOT NULL, " +
                 MovieContract.MovieEntry.COLUMN_DESCRIPTION + " TEXT NOT NULL, " +
-                MovieContract.MovieEntry.COLUMN_RATING + " REAL NOT NULL, " +
-                MovieContract.MovieEntry.COLUMN_YEAR + " TEXT NOT NULL); " +
+                MovieContract.MovieEntry.COLUMN_YEAR + " REAL NOT NULL, " +
+                MovieContract.MovieEntry.COLUMN_VOTE_AVG + " REAL NOT NULL); " +
 
                 " UNIQUE (" + MovieContract.MovieEntry.COLUMN_MOVIE_ID + ") ON CONFLICT REPLACE);";
 
         sqLiteDatabase.execSQL(SQL_CREATE_Favorite_TABLE);
 
     }
+
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
@@ -90,7 +92,8 @@ public class MovieDBHelper extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
             do {
-                MovieItem movie = new MovieItem(cursor.getString(0), cursor.getString(2),cursor.getString(3), cursor.getString(4),cursor.getString(1), cursor.getString(5));
+                //  public MovieItem(String id, String title, String full_poster, String overview, String release_date, String rating) {
+                MovieItem movie = new MovieItem(cursor.getString(1), cursor.getString(2),cursor.getString(3), cursor.getString(4),cursor.getString(5), cursor.getString(6));
                 movieList.add(movie);
             } while (cursor.moveToNext());
         }

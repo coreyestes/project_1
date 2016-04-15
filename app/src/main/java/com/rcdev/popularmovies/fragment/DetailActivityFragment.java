@@ -23,6 +23,7 @@ import com.rcdev.popularmovies.adapter.ReviewAdapter;
 import com.rcdev.popularmovies.adapter.TrailerAdapter;
 import com.rcdev.popularmovies.data.MovieContract;
 import com.rcdev.popularmovies.data.MovieDBHelper;
+import com.rcdev.popularmovies.objects.MovieItem;
 import com.rcdev.popularmovies.objects.ReviewItem;
 import com.rcdev.popularmovies.objects.TrailerItem;
 import com.rcdev.popularmovies.utils.Constants;
@@ -46,6 +47,9 @@ import java.util.ArrayList;
  */
 public class DetailActivityFragment extends Fragment {
     private static final String LOG_TAG = DetailActivityFragment.class.getSimpleName();
+    private static final String MKEY = "movie";
+
+    protected MovieItem mMovie;
     protected String movie_id;
     protected String movie_title;
     protected String movie_poster;
@@ -58,6 +62,14 @@ public class DetailActivityFragment extends Fragment {
     private ArrayList<ReviewItem> mReviewData;
     private TrailerAdapter mTrailerAdapter;
     private ReviewAdapter mReviewAdapter;
+
+    public static DetailActivityFragment newInstance(MovieItem movie) {
+        final DetailActivityFragment fragment = new DetailActivityFragment();
+        final Bundle args = new Bundle();
+        args.putParcelable("movie", movie);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     public DetailActivityFragment() {
     }
@@ -88,77 +100,70 @@ public class DetailActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View detailView = inflater.inflate(R.layout.fragment_detail, container, false);
-        Intent intent = getActivity().getIntent();
+        Bundle args = getArguments();
+        mMovie = args.getParcelable("movie");
 
 
-        //pass ID
-        if (intent != null && intent.hasExtra(Constants.ID)) {
-            movie_id = intent.getStringExtra(Constants.ID);
-            Log.i(LOG_TAG, "movie id is: " + movie_id);
-        }
+        assert mMovie != null;
+        movie_id = mMovie.getId();
 
-        //pass title
-        if (intent != null && intent.hasExtra(Constants.TITLE)) {
-            movie_title = intent.getStringExtra(Constants.TITLE);
-            ((TextView) detailView.findViewById(R.id.tvTitle))
-                    .setText(movie_title);
-
-            getActivity().setTitle(movie_title);
-
-            movie_poster = intent.getStringExtra("path");
-            Log.i(LOG_TAG, "poster URL: " + movie_poster);
-            ImageView poster = (ImageView) detailView.findViewById(R.id.ivPoster);
-            Picasso
-                    .with(getActivity())
-                    .load(movie_poster)
-                    .fit()
-                    .into(poster);
+        movie_title = mMovie.getTitle();
+        ((TextView) detailView.findViewById(R.id.tvTitle))
+                .setText(movie_title);
+        getActivity().setTitle(movie_title);
+        movie_poster = mMovie.getPath();
+        ImageView poster = (ImageView) detailView.findViewById(R.id.ivPoster);
+        Picasso
+                .with(getActivity())
+                .load(movie_poster)
+                .fit()
+                .into(poster);
 
 
-            //pass release date
-            movie_release = intent.getStringExtra(Constants.RELEASE_DATE);
-            ((TextView) detailView.findViewById(R.id.tvReleaseDate))
-                    .setText(movie_release);
-            //pass rating
-            movie_rating = intent.getStringExtra("vote_avg");
-            ((TextView) detailView.findViewById(R.id.movie_rating_text))
-                    .setText(movie_rating);
-            //pass overview
-            movie_overview = intent.getStringExtra(Constants.DESC);
-            ((TextView) detailView.findViewById(R.id.tvOverview))
-                    .setText(movie_overview);
+        //pass release date
+        movie_release = mMovie.getRelease_date();
+        ((TextView) detailView.findViewById(R.id.tvReleaseDate))
+                .setText(movie_release);
+        //pass rating
+        movie_rating =  mMovie.getVote_average();
+        ((TextView) detailView.findViewById(R.id.movie_rating_text))
+                .setText(movie_rating);
+        //pass overview
+        movie_overview = mMovie.getOverview();
+        ((TextView) detailView.findViewById(R.id.tvOverview))
+                .setText(movie_overview);
 
-            ListView reviewListView = (ListView) detailView.findViewById(R.id.lvReview);
-            mReviewAdapter = new ReviewAdapter(getContext(), R.layout.review_item, mReviewData);
-            reviewListView.setAdapter(mReviewAdapter);
+        ListView reviewListView = (ListView) detailView.findViewById(R.id.lvReview);
+        mReviewAdapter = new ReviewAdapter(getContext(), R.layout.review_item, mReviewData);
+        reviewListView.setAdapter(mReviewAdapter);
 
-            ListView trailerListView = (ListView) detailView.findViewById(R.id.lvTrailer);
-            mTrailerAdapter = new TrailerAdapter(getContext(), R.layout.trailer_item, mTrailerData);
-            trailerListView.setAdapter(mTrailerAdapter);
+        ListView trailerListView = (ListView) detailView.findViewById(R.id.lvTrailer);
+        mTrailerAdapter = new TrailerAdapter(getContext(), R.layout.trailer_item, mTrailerData);
+        trailerListView.setAdapter(mTrailerAdapter);
 
-            FloatingActionButton fab = (FloatingActionButton) detailView.findViewById(R.id.btFavorite);
+        FloatingActionButton fab = (FloatingActionButton) detailView.findViewById(R.id.btFavorite);
 
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    MovieDBHelper db = new MovieDBHelper(getContext());
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MovieDBHelper db = new MovieDBHelper(getContext());
 
-                    if (!db.hasObject(movie_id)) {
-                        saveToDatabase();
-                    } else {
-                        removeDatabase();
-                    }
+                if (!db.hasObject(movie_id)) {
+                    saveToDatabase();
+                } else {
+                    removeDatabase();
                 }
-            });
+            }
+        });
 
-            trailerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(mTrailerData.get(position).getKey())));
-                }
-            });
+        trailerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(mTrailerData.get(position).getKey())));
+            }
+        });
 
-        }
+
         return detailView;
     }
 
@@ -190,19 +195,17 @@ public class DetailActivityFragment extends Fragment {
 
     private ContentValues generateContentValues() {
         ContentValues favoriteMovieValues = new ContentValues();
-        favoriteMovieValues.put(MovieContract.MovieEntry.COLUMN_POSTER, movie_poster);
-        favoriteMovieValues.put(MovieContract.MovieEntry.COLUMN_TITLE, movie_title);
-        favoriteMovieValues.put(MovieContract.MovieEntry.COLUMN_YEAR, movie_release);
-        favoriteMovieValues.put(MovieContract.MovieEntry.COLUMN_RATING, movie_rating);
-        favoriteMovieValues.put(MovieContract.MovieEntry.COLUMN_DESCRIPTION, movie_overview);
         favoriteMovieValues.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, movie_id);
+        favoriteMovieValues.put(MovieContract.MovieEntry.COLUMN_TITLE, movie_title);
+        favoriteMovieValues.put(MovieContract.MovieEntry.COLUMN_POSTER, movie_poster);
+        favoriteMovieValues.put(MovieContract.MovieEntry.COLUMN_DESCRIPTION, movie_overview);
+        favoriteMovieValues.put(MovieContract.MovieEntry.COLUMN_YEAR, movie_release);
+        favoriteMovieValues.put(MovieContract.MovieEntry.COLUMN_VOTE_AVG, movie_rating);
         return favoriteMovieValues;
     }
 
 
     public class FetchReviewTask extends AsyncTask<String, Void, ArrayList<ReviewItem>> {
-
-        private final String LOG_TAG = FetchReviewTask.class.getSimpleName();
 
         private ArrayList<ReviewItem> getReviewDataFromJson(String reviewJsonStr) throws JSONException {
             JSONObject reviewObject = new JSONObject(reviewJsonStr);
@@ -230,7 +233,6 @@ public class DetailActivityFragment extends Fragment {
                         .build();
 
                 URL url = new URL(buildUri.toString());
-                Log.e(LOG_TAG, "Review url is " + url);
 
                 //Create the request to Moviedb, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
@@ -289,7 +291,6 @@ public class DetailActivityFragment extends Fragment {
     }
 
     public class FetchTrailerTask extends AsyncTask<String, Void, ArrayList<TrailerItem>> {
-        private final String LOG_TAG = FetchTrailerTask.class.getSimpleName();
 
         private ArrayList<TrailerItem> getTrailerDataFromJson(String trailerJsonStr) throws JSONException {
             JSONObject trailerObject = new JSONObject(trailerJsonStr);
@@ -321,7 +322,6 @@ public class DetailActivityFragment extends Fragment {
                         .appendQueryParameter("api_key", Constants.API_KEY)
                         .build();
                 URL url = new URL(buildUri.toString());
-                Log.e(LOG_TAG, "Trailer url is " + url);
 
                 //Create the request to Moviedb, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();

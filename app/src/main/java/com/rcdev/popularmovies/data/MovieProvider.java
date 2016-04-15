@@ -59,7 +59,6 @@ public class MovieProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
         mOpenHelper = new MovieDBHelper(getContext());
-        //mOpenHelper = MovieDbHelper.getInstance(getContext());
         return true;
     }
 
@@ -84,7 +83,6 @@ public class MovieProvider extends ContentProvider {
         Log.i(LOG_TAG, "query match is: " + match);
         switch (match) {
             case FAVORITE_WITH_ID: {
-                //retCursor = getMovieByMovieId(uri,projection,sortOrder);
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         MovieContract.MovieEntry.TABLE_NAME,
                         projection,
@@ -126,7 +124,6 @@ public class MovieProvider extends ContentProvider {
             case FAVORITE: {
                 long _id = db.insert(MovieContract.MovieEntry.TABLE_NAME, null, values);
                 Log.i(LOG_TAG, "insert Id: " + _id);
-                //insert unless it is already contained in the database
                 if (_id > -1)
                     returnUri = MovieContract.MovieEntry.buildFavoriteUri(_id);
                 else
