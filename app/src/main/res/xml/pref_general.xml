@@ -3,14 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
-
     <ListPreference
         android:defaultValue="@string/pref_direction_default"
         android:entries="@array/pref_sort_direction_label"
         android:entryValues="@array/pref_sort_direction_values"
         android:key="@string/pref_direction_key"
         android:title="@string/pref_sort_label" />
-
 
 </PreferenceScreen>

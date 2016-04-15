@@ -50,9 +50,6 @@ public class DetailActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             startActivity(new Intent(this, SettingsActivity.class));
             return true;
-        } else if (id == R.id.action_home) {
-            startActivity(new Intent(this, MainActivity.class));
-            return true;
         } else {
             onBackPressed();
             finish();
