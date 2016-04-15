@@ -48,16 +48,13 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
- * A placeholder fragment containing a simple view.
- */
+
 public class MainActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String LOG_TAG = MainActivityFragment.class.getSimpleName();
 
     private MoviePosterAdapter mMovieAdapter;
     private ArrayList<MovieItem> mMovieData;
-    private MovieItem[] mMovies;
     @Bind(R.id.gridView)
     GridView gridView;
 
@@ -112,12 +109,10 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
             @Override
             public void onItemClick(final AdapterView<?> parent, final View view,
                                     final int position, final long id) {
-                 MovieItem movie = mMovieAdapter.getItem(position);
+                MovieItem movie = mMovieAdapter.getItem(position);
                 ((Callback) getActivity()).onItemSelected(movie);
             }
         });
-
-
 
         return rootView;
     }
@@ -199,7 +194,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
                     }
                 });
 
-
+                db.close();
             } else {
                 GetMoviesFromURL getMovies = new GetMoviesFromURL();
                 getMovies.execute(direction);

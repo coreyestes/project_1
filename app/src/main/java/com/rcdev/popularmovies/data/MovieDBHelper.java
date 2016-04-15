@@ -63,16 +63,15 @@ public class MovieDBHelper extends SQLiteOpenHelper {
     }
 
 
-
     public boolean hasObject(String id) {
         SQLiteDatabase db = getWritableDatabase();
         String selectString = "SELECT * FROM " + MovieContract.MovieEntry.TABLE_NAME + " WHERE " + MovieContract.MovieEntry.COLUMN_MOVIE_ID + " =?";
-        Cursor cursor = db.rawQuery(selectString, new String[] {id});
+        Cursor cursor = db.rawQuery(selectString, new String[]{id});
         boolean hasObject = false;
-        if(cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             hasObject = true;
             int count = 0;
-            while(cursor.moveToNext()){
+            while (cursor.moveToNext()) {
                 count++;
             }
         }
@@ -80,7 +79,6 @@ public class MovieDBHelper extends SQLiteOpenHelper {
         db.close();
         return hasObject;
     }
-
 
 
     public ArrayList<MovieItem> getAllMovies() {
@@ -93,7 +91,7 @@ public class MovieDBHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 //  public MovieItem(String id, String title, String full_poster, String overview, String release_date, String rating) {
-                MovieItem movie = new MovieItem(cursor.getString(1), cursor.getString(2), cursor.getString(3),cursor.getString(4), cursor.getString(5),cursor.getString(6));
+                MovieItem movie = new MovieItem(cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6));
                 movieList.add(movie);
             } while (cursor.moveToNext());
         }

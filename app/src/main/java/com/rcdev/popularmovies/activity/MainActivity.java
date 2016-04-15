@@ -60,9 +60,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
     public void onItemSelected(MovieItem movie) {
 
         if (mTwoPane) {
-            // In two-pane mode, show the detail view in this activity by
-            // adding or replacing the detail fragment using a
-            // fragment transaction.
             final DetailActivityFragment fragment = DetailActivityFragment.newInstance(movie);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.content_detail, fragment, DetailActivityFragment.class.getSimpleName())

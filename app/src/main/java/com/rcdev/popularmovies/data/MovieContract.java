@@ -45,9 +45,6 @@ public class MovieContract {
         public static final String COLUMN_VOTE_CNT = "vote_count";
 
 
-
-
-
         public static Uri buildFavoriteUri (Long id){
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }

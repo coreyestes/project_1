@@ -32,7 +32,7 @@ public final class Constants {
     public static final String DESCENDING = "desc";
 
     //OTHER
-    public static final String API_KEY = "5694871dec73960c938ad1efe0851922";
+    public static final String API_KEY = "";
     public static final String IMAGE_SIZE = "w780/";
 
     //REVIEW

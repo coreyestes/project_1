@@ -29,9 +29,6 @@ public class DetailActivity extends AppCompatActivity {
             if (getIntent().hasExtra("movie")) {
                 mMovie = getIntent().getParcelableExtra("movie");
             }
-            DetailActivityFragment fragment = DetailActivityFragment.newInstance(mMovie);
-          //  getSupportFragmentManager().beginTransaction().add(R.id.container, fragment)
-         //           .commit();
         }
 
 
