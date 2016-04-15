@@ -93,7 +93,7 @@ public class MovieDBHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 //  public MovieItem(String id, String title, String full_poster, String overview, String release_date, String rating) {
-                MovieItem movie = new MovieItem(cursor.getString(1), cursor.getString(2),cursor.getString(3), cursor.getString(4),cursor.getString(5), cursor.getString(6));
+                MovieItem movie = new MovieItem(cursor.getString(1), cursor.getString(2), cursor.getString(3),cursor.getString(4), cursor.getString(5),cursor.getString(6));
                 movieList.add(movie);
             } while (cursor.moveToNext());
         }

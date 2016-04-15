@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -72,20 +73,20 @@ public class DetailActivityFragment extends Fragment {
     }
 
     public DetailActivityFragment() {
+        setHasOptionsMenu(true);
     }
 
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
         outState.putParcelableArrayList("trailers", mTrailerData);
         outState.putParcelableArrayList("reviews", mReviewData);
-        super.onSaveInstanceState(outState);
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (savedInstanceState == null || !savedInstanceState.containsKey("trailers") || !savedInstanceState.containsKey("reviews")) {
             mTrailerData = new ArrayList<>();
             mReviewData = new ArrayList<>();
@@ -101,37 +102,39 @@ public class DetailActivityFragment extends Fragment {
                              Bundle savedInstanceState) {
         View detailView = inflater.inflate(R.layout.fragment_detail, container, false);
         Bundle args = getArguments();
-        mMovie = args.getParcelable("movie");
+        Intent intent = getActivity().getIntent();
+        if (args != null) {
+            mMovie = args.getParcelable("movie");
+        } else {
+            mMovie = intent.getParcelableExtra("movie");
+        }
 
 
-        assert mMovie != null;
         movie_id = mMovie.getId();
-
         movie_title = mMovie.getTitle();
+        movie_poster = mMovie.getPath();
+        movie_overview = mMovie.getOverview();
+        movie_release = mMovie.getRelease_date();
+        movie_rating = mMovie.getVote_average();
+
+
+        getActivity().setTitle(movie_title);
         ((TextView) detailView.findViewById(R.id.tvTitle))
                 .setText(movie_title);
-        getActivity().setTitle(movie_title);
-        movie_poster = mMovie.getPath();
+
         ImageView poster = (ImageView) detailView.findViewById(R.id.ivPoster);
         Picasso
                 .with(getActivity())
                 .load(movie_poster)
                 .fit()
                 .into(poster);
-
-
-        //pass release date
-        movie_release = mMovie.getRelease_date();
-        ((TextView) detailView.findViewById(R.id.tvReleaseDate))
-                .setText(movie_release);
-        //pass rating
-        movie_rating =  mMovie.getVote_average();
-        ((TextView) detailView.findViewById(R.id.movie_rating_text))
-                .setText(movie_rating);
-        //pass overview
-        movie_overview = mMovie.getOverview();
         ((TextView) detailView.findViewById(R.id.tvOverview))
                 .setText(movie_overview);
+        ((TextView) detailView.findViewById(R.id.tvReleaseDate))
+                .setText(movie_release);
+        ((TextView) detailView.findViewById(R.id.movie_rating_text))
+                .setText(movie_rating);
+
 
         ListView reviewListView = (ListView) detailView.findViewById(R.id.lvReview);
         mReviewAdapter = new ReviewAdapter(getContext(), R.layout.review_item, mReviewData);
@@ -171,11 +174,8 @@ public class DetailActivityFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        //Execute FetchTrailerTask
         FetchTrailerTask fetchTrailerTask = new FetchTrailerTask();
         fetchTrailerTask.execute();
-
-        //Execute FetchReviewTask
         FetchReviewTask fetchReviewTask = new FetchReviewTask();
         fetchReviewTask.execute();
     }

@@ -28,6 +28,7 @@ public class MovieItem implements Parcelable {
     protected MovieItem(Parcel in) {
         id = in.readString();
         title = in.readString();
+        path = in.readString();
         full_poster = in.readString();
         overview = in.readString();
         release_date = in.readString();
@@ -46,7 +47,7 @@ public class MovieItem implements Parcelable {
         }
     };
 
-    public MovieItem(String id, String title, String full_poster, String overview, String release_date, String vote_average) {
+    public MovieItem(String id, String title,  String full_poster,  String overview, String release_date, String vote_average) {
         this.id = id;
         this.title = title;
         this.full_poster = full_poster;
@@ -63,7 +64,6 @@ public class MovieItem implements Parcelable {
     public void setFull_poster(String full_poster) {
         this.full_poster = Constants.BASE_IMAGE_PATH + path;
     }
-
 
 
     public String getTitle() {

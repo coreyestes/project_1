@@ -2,6 +2,7 @@ package com.rcdev.popularmovies.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -57,12 +58,12 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
 
     @Override
     public void onItemSelected(MovieItem movie) {
-        final DetailActivityFragment fragment = DetailActivityFragment.newInstance(movie);
+
         if (mTwoPane) {
             // In two-pane mode, show the detail view in this activity by
             // adding or replacing the detail fragment using a
             // fragment transaction.
-
+            final DetailActivityFragment fragment = DetailActivityFragment.newInstance(movie);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.content_detail, fragment, DetailActivityFragment.class.getSimpleName())
                     .commit();

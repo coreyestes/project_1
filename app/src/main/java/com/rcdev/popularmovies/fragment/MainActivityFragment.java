@@ -112,24 +112,11 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
             @Override
             public void onItemClick(final AdapterView<?> parent, final View view,
                                     final int position, final long id) {
-                final MovieItem movie = mMovieAdapter.getItem(position);
+                 MovieItem movie = mMovieAdapter.getItem(position);
                 ((Callback) getActivity()).onItemSelected(movie);
             }
         });
 
-
-        if (savedInstanceState == null) {
-            requestMovies();
-        } else {
-            mMovies = (MovieItem[]) savedInstanceState.getParcelableArray("movies");
-            if (mMovies != null) {
-                mMovieAdapter.clear();
-                for (final MovieItem movie : mMovies) {
-                    mMovieAdapter.add(movie);
-                }
-                mMovieAdapter.notifyDataSetChanged();
-            }
-        }
 
 
         return rootView;

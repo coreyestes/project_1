@@ -9,8 +9,11 @@ import android.view.MenuItem;
 
 import com.rcdev.popularmovies.R;
 import com.rcdev.popularmovies.fragment.DetailActivityFragment;
+import com.rcdev.popularmovies.objects.MovieItem;
 
 public class DetailActivity extends AppCompatActivity {
+
+    private MovieItem mMovie;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +23,16 @@ public class DetailActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+        if (savedInstanceState == null) {
+            if (getIntent().hasExtra("movie")) {
+                mMovie = getIntent().getParcelableExtra("movie");
+            }
+            DetailActivityFragment fragment = DetailActivityFragment.newInstance(mMovie);
+          //  getSupportFragmentManager().beginTransaction().add(R.id.container, fragment)
+         //           .commit();
+        }
 
 
     }

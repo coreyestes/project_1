@@ -57,6 +57,7 @@ public class FetchMovieTask extends AsyncTask<String, Void, ArrayList<MovieItem>
             String overview;
             String release_date;
             String poster;
+            String path;
             String title;
             String rating;
             //Get JSON object representing the Movie.
@@ -66,6 +67,7 @@ public class FetchMovieTask extends AsyncTask<String, Void, ArrayList<MovieItem>
             id = currentMovie.getString(ID);
             overview = currentMovie.getString(OVERVIEW);
             release_date = currentMovie.getString(RELEASE_DATE);
+            path = currentMovie.getString(currentMovie.getString(POSTER_PATH));
             poster = posterBaseUrl + currentMovie.getString(POSTER_PATH);
             title = currentMovie.getString(TITLE);
             rating = currentMovie.getString(RATING);
