@@ -117,8 +117,6 @@ public class DetailActivityFragment extends Fragment {
         movie_release = mMovie.getRelease_date();
         movie_rating = mMovie.getVote_average();
 
-
-        getActivity().setTitle(movie_title);
         ((TextView) detailView.findViewById(R.id.tvTitle))
                 .setText(movie_title);
 
